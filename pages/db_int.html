@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        h2 {
+            margin: 40px 0 20px;
+            text-align: center;
+        }
+
+        .section {
+            width: 70%;
+            background-color: #f2e4eb;
+            border-radius: 12px;
+            margin: 10px 0;
+            padding: 20px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.05);
+        }
+
+        .section h3 {
+            margin-top: 0;
+        }
+
+        .section p {
+            margin-bottom: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #e8dce2;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-btn {
+            color: #E7717D;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .shelf-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            background-color: #f8f8f8;
+            border: 2px solid #d1d1d1;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell.empty {
+            background-color: #f0f0f0;
+            color: #888;
+        }
+
+        .cell.occupied {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+
+        .cell h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .cell-content {
+            font-size: 14px;
+            color: #666;
+        }
+
+        select, input {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: #f2e4eb;
+            color: #7E685A;
+            font-size: 16px;
+            padding: 10px 40px 10px 16px;
+            border: 2px solid #E7717D;
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            transition: 0.3s ease;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%237E685A" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 18px;
+        }
+
+        input {
+            padding: 10px 16px;
+            background-image: none;
+            width: 200px;
+        }
+
+        select:hover, input:hover {
+            background-color: #fff2f9;
+            border-color: #AFD275;
+        }
+
+        .search-criteria {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .criteria-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .search-button {
+            background-color: #E7717D;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        .search-button:hover {
+            background-color: #AFD275;
+        }
+
+        .search-results {
+            margin-top: 30px;
+            border-top: 1px solid #d1d1d1;
+            padding-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">ИС — Информационная система</div>
+        <div class="user-block">
+            <div class="login">Иван Иванович</div>
+            <div class="dropdown">
+                <button class="dropbtn">↴</button>
+                <div class="dropdown-content">
+                    <a href="#">Профиль</a>
+                    <a href="#">Настройки</a>
+                    <a href="#" onclick="logout()">Выход</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <h2>Работа с данными</h2>
+
+    <div class="section">
+        <h3>📦 Склад</h3>
+        <p>Просмотр текущих остатков по ячейкам склада, деталям и редукторам.</p>
+        <button onclick="openModal1()">Открыть склад</button>
+    </div>
+
+    <div class="section">
+        <h3>🔍 Поиск и фильтрация</h3>
+        <p>Поиск объектов по заданным критериям.</p>
+        <button onclick="openModal2()">Перейти к поиску</button>
+    </div>
+
+    <div class="section">
+        <h3>⚙️ Управление объектами</h3>
+        <p>Редактирование информации о типах редукторов и деталей.</p>
+        <button onclick="openManageModal()">Редактировать</button>
+    </div>
+
+    <div class="section">
+        <h3>📋 Журналы и контроль</h3>
+        <p>Просмотр истории действий пользователей и ошибок в системе.</p>
+        <button onclick=openLogsModal()>Открыть журналы</button>
+    </div>
+
+    <div class="section">
+        <h3>📄 Работа с отчётами</h3>
+        <p>Формирование, отправка и печать отчётов по результатам проверок сборочных наборов.</p>
+        <button onclick=openRepsModal()>Начать работу</button>
+    </div>
+
+    <a href="/base" class="back-button" title="На главную">← Назад</a>
+
+    <!-- МОДАЛЬНОЕ ОКНО СКЛАДА -->
+    <div id="warehouseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal1()">&times;</span>
+            <h3>Выберите стеллаж:</h3>
+            <select id="rackSelect" onchange="renderShelf()">
+                <option value="А-01">Стеллаж 1</option>
+                <option value="А-02">Стеллаж 2</option>
+            </select>
+            <div id="shelfGrid" class="shelf-grid"></div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ПОИСКА -->
+    <div id="findModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal2()">&times;</span>
+            <h3>Выберите критерии поиска:</h3>
+
+            <div class="search-criteria">
+                <div class="criteria-group">
+                    <label for="objectType">Тип объекта:</label>
+                    <select id="objectType">
+                        <option value="all">Все</option>
+                        <option value="reducer">Редуктор</option>
+                        <option value="det">Деталь</option>
+                    </select>
+                </div>
+
+                <div class="criteria-group" id="reducerCriteria">
+                    <label for="reducerType">Тип редуктора:</label>
+                    <select id="reducerType">
+                        <option value="all">Все типы</option>
+                        <option value="Цилиндрический">Цилиндрический</option>
+                        <option value="Конический">Конический</option>
+                        <option value="Червячный">Червячный</option>
+                        <option value="Планетарный">Планетарный</option>
+                        <option value="Планетарно-цевочный">Планетарно-цевочный</option>
+                    </select>
+                </div>
+
+                <div class="criteria-group" id="detCriteria" style="display:none;">
+                    <label for="detType">Тип детали:</label>
+                    <select id="detType">
+                        <option value="all">Все типы</option>
+                        <option value="Штифт">Штифт</option>
+                        <option value="Подшипник шариковый">Подшипник шариковый</option>
+                        <option value="Подшипник роликовый">Подшипник роликовый</option>
+                        <option value="Кольцо">Кольцо</option>
+                        <option value="Шпонка">Шпонка</option>
+                        <option value="Винт">Винт</option>
+                        <option value="Вал">Вал</option>
+                        <option value="Эксцентрик">Эксцентрик</option>
+                        <option value="Сателлит">Сателлит</option>
+                        <option value="Втулка">Втулка</option>
+                        <option value="Крышка">Крышка</option>
+                        <option value="Корпус">Корпус</option>
+                    </select>
+                </div>
+
+                <div class="criteria-group">
+                    <label for="cell">Ячейка склада:</label>
+                    <input type="text" id="cell" placeholder="Адрес ячейки">
+                </div>
+
+                <div class="criteria-group">
+                    <label for="dateFrom">Дата поступления с:</label>
+                    <input type="date" id="dateFrom">
+                </div>
+
+                <div class="criteria-group">
+                    <label for="dateTo">Дата поступления по:</label>
+                    <input type="date" id="dateTo">
+                </div>
+            </div>
+
+            <button class="search-button" onclick="performSearch()">Найти</button>
+            <button class="search-button" onclick="resetFilters()">Сбросить фильтры</button>
+            <button class="search-button" onclick="clearResults()">Очистить результаты</button>
+
+            <div class="search-results" id="searchResults">
+                <!-- Здесь будут отображаться результаты поиска -->
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО УПРАВЛЕНИЯ ТИПАМИ -->
+    <div id="manageModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeManageModal()">&times;</span>
+            <h3>Управление типами</h3>
+
+            <div class="search-criteria">
+                <div class="criteria-group">
+                    <label for="manageObjectType">Что редактировать:</label>
+                    <select id="manageObjectType">
+                        <option value="reducer">Редукторы</option>
+                        <option value="det">Детали</option>
+                    </select>
+                </div>
+
+                <div class="criteria-group">
+                    <label for="manageAction">Что сделать:</label>
+                    <select id="manageAction">
+                        <option value="add">Добавить новый</option>
+                        <option value="edit">Изменить существующий</option>
+                    </select>
+                </div>
+
+                <div class="criteria-group" id="selectExistingGroup" style="display:none;">
+                    <label for="existingName">Выберите для изменения:</label>
+                    <select id="existingName">
+                        <option value="">(Загрузка...)</option>
+                    </select>
+                </div>
+
+                <div class="criteria-group">
+                    <label for="newName">Название:</label>
+                    <input type="text" id="newName" placeholder="Введите название">
+                </div>
+
+                <div class="criteria-group">
+                    <label for="description">Описание:</label>
+                    <input type="text" id="description" placeholder="Введите описание">
+                </div>
+            </div>
+
+            <button class="search-button" onclick="submitManage()">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ЖУРНАЛОВ -->
+    <div id="logsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeLogsModal()">&times;</span>
+            <h3>Журналы и отчёты</h3>
+
+            <div class="search-criteria">
+                <div class="criteria-group">
+                    <label for="userFilter">Пользователь:</label>
+                    <select id="userFilter">
+                        <option value="all">Все пользователи</option>
+                        <!-- Сюда будут подгружаться пользователи из БД -->
+                    </select>
+                </div>
+
+                <div class="criteria-group">
+                    <label for="dateFromLogs">Дата с:</label>
+                    <input type="date" id="dateFromLogs">
+                </div>
+
+                <div class="criteria-group">
+                    <label for="dateToLogs">Дата по:</label>
+                    <input type="date" id="dateToLogs">
+                </div>
+            </div>
+
+            <button class="search-button" onclick="loadLogs()">Загрузить</button>
+            <button class="search-button" onclick="exportLogs()">Экспорт в CSV</button>
+            <button class="search-button" onclick="clearLogResults()">Очистить результаты</button>
+
+            <div class="search-results" id="logsSearchResults">
+                <!-- Сюда будут загружаться данные -->
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО ОТЧЕТОВ -->
+    <div id="repsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeRepsModal()">&times;</span>
+            <h3>Работа с отчётами по результатам проверок комплектности</h3>
+            <div class="search-criteria">
+                <div class="criteria-group">
+                    <label for="userFilterReps">Пользователь:</label>
+                    <select id="userFilterReps">
+                        <option value="all">Все пользователи</option>
+                        <!-- Сюда будут подгружаться пользователи из БД -->
+                    </select>
+                </div>
+                <div class="criteria-group">
+                    <label for="dateFromReps">Дата с:</label>
+                    <input type="date" id="dateFromReps">
+                </div>
+
+                <div class="criteria-group">
+                    <label for="dateToReps">Дата по:</label>
+                    <input type="date" id="dateToReps">
+                </div>
+            </div>
+
+            <button class="search-button" onclick="loadReps()">Загрузить</button>
+            <button class="search-button" onclick="exportReps()">Экспорт в файл</button>
+            <button class="search-button" onclick="sendReps()">Отправить</button>
+            <button class="search-button" onclick="clearRepResults()">Очистить результаты</button>
+
+            <div class="search-results" id="repsSearchResults">
+                <!-- Сюда будут загружаться данные -->
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js_scripts/db_int.js"> </script>
+</body>
+</html>

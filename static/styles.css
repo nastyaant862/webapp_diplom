@@ -1,0 +1,193 @@
+/* Базовые настройки */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e8dce2;
+    color: #7E685A;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 100vh;
+}
+
+footer {
+    padding: 15px 20px; /* Уменьшили вертикальные отступы */
+    background-color: #e3d1da;
+    border-top: 1px solid #e9ecef;
+    text-align: center;
+    font-size: 14px;
+    margin-top: auto;
+    color: #7E685A;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center; /* Центрируем содержимое */
+    gap: 40px; /* Расстояние между блоками */
+    max-width: 800px;
+    margin: 0 auto 10px; /* Уменьшили нижний отступ */
+    align-items: center; /* Выравниваем по вертикали */
+}
+
+.footer-content h4 {
+    margin: 0 0 5px 0; /* Уменьшили отступы заголовков */
+    font-size: 15px;
+}
+
+.footer-content p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.footer-copyright {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* Хедер */
+header {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    background-color: #E7717D;
+    color: white;
+    padding: 20px 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Логотип + название */
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: -20px;
+}
+
+.logo::before {
+    content: '';
+    width: 37px;
+    height: 40px;
+    background-image: url('/static/logo_proz.png');
+    background-size: cover;
+    display: inline-block;
+}
+
+/* Блок пользователя */
+.user-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: -20px;
+}
+
+.login {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.login::before {
+    content: '';
+    width: 25px;
+    height: 25px;
+    background-image: url('/static/free-icon-my-account-17200091.png');
+    background-size: cover;
+    display: inline-block;
+}
+
+/* Выпадающее меню */
+.dropbtn {
+    background-color: transparent;
+    color: white;
+    padding: 8px;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f2e4eb;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+    border-radius: 8px;
+}
+
+.dropdown-content a {
+    color: #7E685A;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #e6d3dc;
+    border-radius: 8px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Кнопки */
+button {
+    background-color: #9F7B7B;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-right: 10px; /* Добавьте это свойство */
+}
+
+/* Чтобы у последней кнопки не было отступа */
+button:last-child {
+    margin-right: 0;
+}
+
+button:hover {
+    background-color: #AFD275;
+    color: black;
+}
+
+/* Кнопка назад */
+.back-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #E7717D;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.3s ease;
+    z-index: 999;
+}
+
+.back-button:hover {
+    background-color: #AFD275;
+    color: #000;
+}

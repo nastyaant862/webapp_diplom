@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка комплектности</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        h2 {
+            margin: 40px 0 20px;
+            text-align: center;
+        }
+
+        .section {
+            width: 70%;
+            background-color: #f2e4eb;
+            border-radius: 12px;
+            margin: 10px 0;
+            padding: 20px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.05);
+        }
+
+        .section h3 {
+            margin-top: 0;
+        }
+
+        .section p {
+            margin-bottom: 10px;
+        }
+
+        #configSection {
+            display: none;
+        }
+
+        #saveResSection {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="logo">ИС — Информационная система</div>
+    <div class="user-block">
+        <div class="login">Иван Иванович</div>
+        <div class="dropdown">
+            <button class="dropbtn">↴</button>
+            <div class="dropdown-content">
+                <a href="#">Профиль</a>
+                <a href="#">Настройки</a>
+                <a href="#" onclick="logout()">Выход</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<h2>Проверка комплектности</h2>
+
+<div class="section">
+    <h3>Запуск проверки</h3>
+    <p>Пожалуйста, убедитесь, что комплект установлен ровно под камерами в установленных границах.</p>
+    <button onclick="showConfig()">Запуск</button>
+</div>
+
+<div class="section" id="configSection">
+    <h3>Выбор сборки</h3>
+    <label>Тип редуктора:
+        <select id="reducerType">
+            <option value="planetary-cev">Планетарно-цевочный</option>
+            <option value="cylindrical" disabled>Цилиндрический</option>
+            <option value="concal" disabled>Конический</option>
+            <option value="planetary" disabled>Планетарный</option>
+        </select>
+    </label>
+    <label>Модель:
+        <select id="reducerModel">
+            <option value="PCR19.10">ПЦР19.10</option>
+            <option disabled>ПЦР-47</option>
+            <option disabled>ПЦР-60</option>
+            <option disabled>ПЦР-85</option>
+            <option disabled>ПЦР-120</option>
+            <option disabled>ПЦР-160</option>
+            <option disabled>ПЦР-210</option>
+        </select>
+    </label>
+    <button onclick="startCheck()">Старт</button>
+    <div id="status" style="margin-top: 15px; color: #444;"></div>
+</div>
+
+<div class="section" id="saveResSection">
+    <h3>Сохранение результатов</h3>
+    <p>Обязательно сохраните результаты проверки.</p>
+    <button onclick="saveResults()">Сохранить</button>
+    <div id="save" style="margin-top: 15px; color: #444;"></div>
+</div>
+
+<a href="/base" class="back-button" title="На главную">← Назад</a>
+
+<script src="static/js_scripts/checking_1.js"> </script>
+</body>
+</html>
